@@ -1,5 +1,6 @@
 html {
     font-family: arial;
+    background-color: #f2f2c6;
 }
 .city {
     display: flex;
@@ -10,14 +11,13 @@ html {
 
 .item {
     display: flex;
-    width: 50%;
-    background-color: white;
+    width: 30%;
     margin-bottom: 1vh;
     border: 1px solid #cccccc;
     border-right: 50%;
 }
 .item:first-child {
-    background-color: #f5f5f5;
+    background-color: #ffeac8;
 }
 .item:last-child {
     margin-bottom: 0;
@@ -27,4 +27,24 @@ html {
 }
 .weather {
     font-size: 1.1em;
+    display: inline-block;
+}
+.wind.item{
+    border-radius: 2px;
+}
+
+.weatherTitle, .windTitle {
+    width: 10%;
+    text-align: center;
+    display: inline-block;
+    font-size: 1.3em;
+    border: 3px outset #e0bd00;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding: 0.2em;
+}
+.weatherTitleClick, .windTitleClick {
+    background-color: #ffeac8;
+    border: 3px inset #b7aa03;
 }
