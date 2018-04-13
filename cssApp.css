@@ -44,7 +44,8 @@ html {
     margin-bottom: 10px;
     padding: 0.2em;
 }
-.weatherTitleClick, .windTitleClick {
+.selected-tab {
     background-color: #ffeac8;
+    background-color: #ead6b6; 
     border: 3px inset #b7aa03;
 }

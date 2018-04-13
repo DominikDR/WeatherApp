@@ -8,7 +8,8 @@ const onButtonClick = (event)=> {
         document.getElementsByClassName("city")[0].innerText = `Pogoda dla miasta: ${cityFromApi}`;
         renderWeatherContent(filterData(data));
         
-        weatherTitle.classList.add("weatherTitleClick");
+        windTitle.classList.remove('selected-tab');
+        weatherTitle.classList.add("selected-tab");
     });
 }
 
@@ -65,8 +66,8 @@ const renderWeatherContent = (filteredData)=> {
 }
 
 const renderWindContent = ()=> {
-    weatherTitle.classList.remove("weatherTitleClick");
-    windTitle.classList.add("windTitleClick");
+    weatherTitle.classList.remove("selected-tab");
+    windTitle.classList.add("selected-tab");
     const date = apiAnswer.query.results.channel.item.forecast[0].date
     const speed = apiAnswer.query.results.channel.wind.speed;
 
@@ -80,12 +81,11 @@ const button = document.getElementsByName("submit")[0];
 button.addEventListener("click", onButtonClick);
 
 const weatherTitle = document.getElementsByClassName("weatherTitle")[0];
-weatherTitle.className = "weatherTitle";
 const windTitle = document.getElementsByClassName("windTitle")[0];
 
 weatherTitle.addEventListener("click", ()=>{
-    windTitle.classList.remove("windTitleClick");
-    weatherTitle.classList.add("weatherTitleClick");
+    windTitle.classList.remove("selected-tab");
+    weatherTitle.classList.add("selected-tab");
     renderWeatherContent(filterData(apiAnswer));
 })
 windTitle.addEventListener("click", renderWindContent);
