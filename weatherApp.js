@@ -1,15 +1,22 @@
 let apiAnswer;
-const onButtonClick = (event)=> {
-    let city = document.getElementsByName("area")[0].value
+let searchBar = document.getElementsByName("area")[0]
+searchBar.addEventListener("keypress", (event)=> {
+	const key = event.which || event.keyCode;
+    if (key === 13) { // 13 is enter
+      search(); // code for enter
+    }
+})
+const search = ()=> {
+    let city = searchBar.value;
     fetchWeather(city).then(data => {
         apiAnswer = data;
         console.log(data, "data")
         const cityFromApi = data.query.results.channel.location.city;
-        document.getElementsByClassName("city")[0].innerText = `Pogoda dla miasta: ${cityFromApi}`;
+        document.getElementsByClassName("city")[0].innerText = `Weather for: ${cityFromApi}`;
         renderWeatherContent(filterData(data));
         
-        windTitle.classList.remove('selected-tab');
-        weatherTitle.classList.add("selected-tab");
+        windButton.classList.remove('selected-tab');
+        weatherButton.classList.add("selected-tab");
     });
 }
 
@@ -66,8 +73,8 @@ const renderWeatherContent = (filteredData)=> {
 }
 
 const renderWindContent = ()=> {
-    weatherTitle.classList.remove("selected-tab");
-    windTitle.classList.add("selected-tab");
+    weatherButton.classList.remove("selected-tab");
+    windButton.classList.add("selected-tab");
     const date = apiAnswer.query.results.channel.item.forecast[0].date
     const speed = apiAnswer.query.results.channel.wind.speed;
 
@@ -78,17 +85,17 @@ const renderWindContent = ()=> {
 }
 
 const button = document.getElementsByName("submit")[0];
-button.addEventListener("click", onButtonClick);
+button.addEventListener("click", search);
 
-const weatherTitle = document.getElementsByClassName("weatherTitle")[0];
-const windTitle = document.getElementsByClassName("windTitle")[0];
+const weatherButton = document.getElementsByClassName("weather-button")[0];
+const windButton = document.getElementsByClassName("wind-button")[0];
 
-weatherTitle.addEventListener("click", ()=>{
-    windTitle.classList.remove("selected-tab");
-    weatherTitle.classList.add("selected-tab");
+weatherButton.addEventListener("click", ()=>{
+    windButton.classList.remove("selected-tab");
+    weatherButton.classList.add("selected-tab");
     renderWeatherContent(filterData(apiAnswer));
 })
-windTitle.addEventListener("click", renderWindContent);
+windButton.addEventListener("click", renderWindContent);
 
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`

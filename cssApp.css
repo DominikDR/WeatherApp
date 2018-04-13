@@ -33,7 +33,7 @@ html {
     border-radius: 2px;
 }
 
-.weatherTitle, .windTitle {
+.weather-button, .wind-button {
     width: 10%;
     text-align: center;
     display: inline-block;
