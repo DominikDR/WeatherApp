@@ -9,7 +9,7 @@ searchBar.addEventListener("keypress", (event)=> {
 const search = ()=> {
     let city = searchBar.value;
 	
-	toggleButtonLoader(true, '<div class="loader"></div>', search);
+	/*toggleButtonLoader(true, '<div class="loader"></div>', search);*/
     fetchWeather(city)
 	.catch(error => 
 		console.log("Błąd sieci lub serwera. \nFunkcja catch przechwyciła następujące logi błędów: ", error))
@@ -22,10 +22,10 @@ const search = ()=> {
         
         windButton.classList.remove('selected-tab');
         weatherButton.classList.add('selected-tab');
-		toggleButtonLoader(false, '', search);
+		/*toggleButtonLoader(false, '', search);*/
     })
 	.catch(error => {
-		toggleButtonLoader(false, '', search);
+		/*toggleButtonLoader(false, '', search);*/
 		console.log("Błąd danych.", error)
 	});
 }
@@ -110,7 +110,7 @@ windButton.addEventListener("click", renderWindContent);
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
 let fetchWeather = (city)=>{
-    const requestUrl = `https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="${city}")&format=json&env=store://datatables.org/alltableswithkeys`;
+    const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=26c42f8b8305b74545f93ce538ad2356`;
     return fetch(requestUrl, {
         method: 'get'
     }).then((response)=> {

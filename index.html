@@ -3,14 +3,18 @@
     <head>
     <meta charset="UTF-8" />
     <title>Weather in your city!</title>
-        <h3>Check weather in your city!</h3>
         <link rel="stylesheet" href="cssApp.css">
         <link rel="stylesheet" href="loader/loader.css">
+		<link rel="stylesheet" href="external/font-awesome-4.7.0/css/font-awesome.min.css">
     </head>
     <body>
-		<div class="searchbar-box">
-			<input type="text" name="area" placeholder="type here..."/>
-			<button type="submit" name="submit" class="searchButton">Search</button>
+		<div class="header">
+			<span class="title">Weather<b>App</b></span>
+			
+			<div class="searchbar-box">
+				<input class="search-input" type="text" name="area" placeholder="type here..."/>
+				<i name="submit" class="fa fa-search searchButton"></i>
+			</div>
 		</div>
         <div class="city"></div>
         <div class="weather-button">Weather</div>
