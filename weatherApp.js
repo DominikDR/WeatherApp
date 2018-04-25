@@ -1,5 +1,5 @@
 let apiAnswer;
-let searchBar = document.getElementsByName("area")[0]
+let searchBar = document.getElementsByName("area")[0];
 searchBar.addEventListener("keypress", (event)=> {
 	const key = event.which || event.keyCode;
     if (key === 13) { // 13 is enter
@@ -8,7 +8,12 @@ searchBar.addEventListener("keypress", (event)=> {
 })
 const search = ()=> {
     let city = searchBar.value;
-    fetchWeather(city).then(data => {
+	
+	toggleButtonLoader(true, '<div class="loader"></div>', search);
+    fetchWeather(city)
+	.catch(error => 
+		console.log("Błąd sieci lub serwera. \nFunkcja catch przechwyciła następujące logi błędów: ", error))
+	.then(data => {
         apiAnswer = data;
         console.log(data, "data")
         const cityFromApi = data.query.results.channel.location.city;
@@ -16,8 +21,13 @@ const search = ()=> {
         renderWeatherContent(filterData(data));
         
         windButton.classList.remove('selected-tab');
-        weatherButton.classList.add("selected-tab");
-    });
+        weatherButton.classList.add('selected-tab');
+		toggleButtonLoader(false, '', search);
+    })
+	.catch(error => {
+		toggleButtonLoader(false, '', search);
+		console.log("Błąd danych.", error)
+	});
 }
 
 let filterData = (dataFromApi)=> {
@@ -84,7 +94,7 @@ const renderWindContent = ()=> {
     renderItem([divItem]);
 }
 
-const button = document.getElementsByName("submit")[0];
+const button = document.getElementsByClassName("searchButton")[0];
 button.addEventListener("click", search);
 
 const weatherButton = document.getElementsByClassName("weather-button")[0];

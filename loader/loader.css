@@ -1,0 +1,16 @@
+.loader {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	margin-left: 60px;
+	top: 5%;
+	border-radius: 50%;
+	border: 2px solid rgba(113, 113, 113, 0.5);
+	border-top: 2px solid #333;
+	animation: animate .6s infinite linear;
+}
+@keyframes animate {
+	to {
+    transform: rotate(360deg);
+  }
+}

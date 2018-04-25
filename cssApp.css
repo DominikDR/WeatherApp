@@ -49,3 +49,15 @@ html {
     background-color: #ead6b6; 
     border: 3px inset #b7aa03;
 }
+
+.searchbar-box {
+	display: flex;
+}
+.searchButton {
+	position: relative;
+	display: flex;
+	margin-left: 1%;
+	align-items: center;
+	min-height: 21px;
+	min-width: 59px;
+}
