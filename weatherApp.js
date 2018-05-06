@@ -42,18 +42,18 @@ let filterData = (dataFromApi)=> {
     return weatherRows;
 }
 
-let createWeatherItem = (weatherItem, name)=> {
-    /*const divData= document.createElement("div");
+/*let createWeatherItem = (weatherItem, name)=> {
+    const divData= document.createElement("div");
     divData.innerHTML = `${weatherItem.date}- `;
     divData.className = 'date';
 
     const divWeather = document.createElement("div");
     divWeather.innerHTML = weatherItem.value;
     divWeather.className = name;
-*/
+
     const divItem = document.createElement("div");
-    /*divItem.appendChild(divData);
-    divItem.appendChild(divWeather);*/
+    divItem.appendChild(divData);
+    divItem.appendChild(divWeather);
     divItem.innerHTML = `
         <div class="date">${weatherItem.date}- </div>
         <div class="${name}">${weatherItem.value}</div>
@@ -61,8 +61,9 @@ let createWeatherItem = (weatherItem, name)=> {
     divItem.className = 'item';
     console.log("divItem",divItem);
     return divItem;
-}
+}*/
 
+/*
 const renderItem = (array)=> {
 	console.log("array", array)
     const containerDiv = document.createElement("div");
@@ -92,13 +93,16 @@ const renderWindContent = ()=> {
     
     console.log("divItem", divItem);
     renderItem([divItem]);
-}
+}*/
 
 const button = document.getElementsByClassName("searchButton")[0];
 button.addEventListener("click", search);
+/*
 
 const weatherButton = document.getElementsByClassName("weather-button")[0];
 const windButton = document.getElementsByClassName("wind-button")[0];
+*/
+/*
 
 weatherButton.addEventListener("click", ()=>{
     windButton.classList.remove("selected-tab");
@@ -106,17 +110,37 @@ weatherButton.addEventListener("click", ()=>{
     renderWeatherContent(filterData(apiAnswer));
 })
 windButton.addEventListener("click", renderWindContent);
+*/
 
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
+
+const parse = (jsonObject)=> {
+	jsonObject.list.reduce((currentSum, currentValue) =>{
+		const date = currentValue.dt_txt.split(" ")[0];
+			if(currentSum[date]) {
+				currentSum[date].push(currentValue);
+			} else (currentSum[date] = [currentValue])
+		console.log("currentSum", currentSum);
+		return currentSum;
+	}, {})
+}
+
 let fetchWeather = (city)=>{
-    const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=26c42f8b8305b74545f93ce538ad2356`;
+/*    const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=26c42f8b8305b74545f93ce538ad2356`;*/
+	const requestUrl = `dupadupadupadupadupadupadupa`;
     return fetch(requestUrl, {
         method: 'get'
     }).then((response)=> {
         console.log("data", response);
         return response.json(); //fetch zwraca obiekt response, a potem w wykonujemy funkcję json zawartą w prototypie tego response, żeby dostać potrzebne dane. json() tylko je wyciąga, a ich konkwersja dzieje się pod spodem
     })
+	.catch(error => {
+		console.log("mockedData", mockedData)
+		const parsed = parse(mockedData);
+		console.log("parsed", parsed)
+		return parsed;
+	})
     
     /* Zamiast zwykłego XHR, stosuje się funkcję fetch, która domyślnie zwraca Promise, a wszystkie funkcje z promisa starego robi pod spodem:)
     return new Promise((resolve, reject)=>

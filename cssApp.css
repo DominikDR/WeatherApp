@@ -1,6 +1,7 @@
 html, body {
+	height: 100%;
     font-family: arial;
-    background-color: #f2f2c6;
+    background-color: #f4f4f4;
 	margin: 0;
 	padding: 0;
 }
@@ -9,7 +10,7 @@ html, body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #4d6ab7;
+	background-color: #075fab;
 	height: 50px;
 }
 
@@ -47,6 +48,41 @@ html, body {
 	font-size: 20px;
 	color: #555555;
 }
+
+.container {
+	height: 100%;
+	padding: 50px;
+    margin: 50px;
+    background-color: #fcfcfc;
+}
+
+.daylist {
+	display: flex;
+	overflow-x: auto;
+}
+.day {
+	display: flex;
+	flex-shrink: 0;
+	border: 1px solid #000000;
+	height: 60px;
+	width: 120px;
+	padding: 20px;
+}
+.date-and-temp {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+.meteoicon:before {
+	font-family: 'MeteoconsRegular';
+	content: attr(data-icon);
+	color: yellow;
+    font-size: 50px;
+}
+
+/*
 
 .city {
     display: flex;
@@ -95,6 +131,7 @@ html, body {
     background-color: #ead6b6; 
     border: 3px inset #b7aa03;
 }
+*/
 
 
 .search-icon {
