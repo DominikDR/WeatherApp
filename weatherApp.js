@@ -18,10 +18,10 @@ const search = ()=> {
         console.log(data, "data")
         const cityFromApi = data.query.results.channel.location.city;
         document.getElementsByClassName("city")[0].innerText = `Weather for: ${cityFromApi}`;
-        renderWeatherContent(filterData(data));
+        /*renderWeatherContent(filterData(data));
         
         windButton.classList.remove('selected-tab');
-        weatherButton.classList.add('selected-tab');
+        weatherButton.classList.add('selected-tab');*/
 		/*toggleButtonLoader(false, '', search);*/
     })
 	.catch(error => {
@@ -29,7 +29,7 @@ const search = ()=> {
 		console.log("Błąd danych.", error)
 	});
 }
-
+/*
 let filterData = (dataFromApi)=> {
     const forecasts = dataFromApi.query.results.channel.item.forecast;
     const weatherRows = forecasts.slice(0,3).map((currValue) => { 
@@ -40,7 +40,7 @@ let filterData = (dataFromApi)=> {
     });
     console.log("weatherRows", weatherRows);
     return weatherRows;
-}
+}*/
 
 /*let createWeatherItem = (weatherItem, name)=> {
     const divData= document.createElement("div");
@@ -115,15 +115,46 @@ windButton.addEventListener("click", renderWindContent);
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
 
-const parse = (jsonObject)=> {
-	jsonObject.list.reduce((currentSum, currentValue) =>{
+const parse = (jsonObject) => {
+	const parsed = jsonObject.list.reduce((currentSum, currentValue) =>{
 		const date = currentValue.dt_txt.split(" ")[0];
 			if(currentSum[date]) {
 				currentSum[date].push(currentValue);
 			} else (currentSum[date] = [currentValue])
-		console.log("currentSum", currentSum);
 		return currentSum;
 	}, {})
+	return parsed;
+}
+//2018-02-12 12.02
+const createDayBoxes = (daysFromApi) => {
+	console.log("daysFromApi", daysFromApi);
+	const daylist = Object.keys(daysFromApi).map(el => {
+		const dates = el.split("-");
+		const dayAndMonth = `${dates[2]}.${dates[1]}`;
+		const divDay = document.createElement("div");
+		divDay.innerHTML = `
+			<span class="meteoicon" data-icon="B"></span>
+			<div class="date-and-temp">
+				<span class="date">${dayAndMonth}</span>
+				<span class="temp">30°C</span>
+			</div>
+		`;
+		divDay.className = "day";
+		return divDay;
+	});
+	console.log("[daylist]",daylist)
+	return daylist;
+}
+
+const renderDaylist = (array) => {
+	console.log("argue of renderDaylist", array);
+	const daylistDiv = document.createElement("div");
+       array.forEach((element) =>{
+           daylistDiv.appendChild(element);
+       });
+    daylistDiv.className = 'daylist';
+    const daylist = document.getElementsByClassName("daylist")[0];
+    daylist.parentNode.replaceChild(daylistDiv, daylist);
 }
 
 let fetchWeather = (city)=>{
@@ -134,11 +165,13 @@ let fetchWeather = (city)=>{
     }).then((response)=> {
         console.log("data", response);
         return response.json(); //fetch zwraca obiekt response, a potem w wykonujemy funkcję json zawartą w prototypie tego response, żeby dostać potrzebne dane. json() tylko je wyciąga, a ich konkwersja dzieje się pod spodem
-    })
-	.catch(error => {
-		console.log("mockedData", mockedData)
+    }).catch(error => {
+		console.log("mockedData", mockedData);
 		const parsed = parse(mockedData);
-		console.log("parsed", parsed)
+		const dayBoxes = createDayBoxes(parsed);
+		console.log("dayBoxes", dayBoxes);
+		const daylist =  renderDaylist(dayBoxes);
+		console.log("daylist", daylist);
 		return parsed;
 	})
     
@@ -155,3 +188,5 @@ let fetchWeather = (city)=>{
         req.send(null);
     })*/
 }
+
+
