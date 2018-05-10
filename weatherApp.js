@@ -115,6 +115,7 @@ windButton.addEventListener("click", renderWindContent);
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
 
+
 const parse = (jsonObject) => {
 	const parsed = jsonObject.list.reduce((currentSum, currentValue) =>{
 		const date = currentValue.dt_txt.split(" ")[0];
@@ -136,25 +137,55 @@ const createDayBoxes = (daysFromApi) => {
 			<span class="meteoicon" data-icon="B"></span>
 			<div class="date-and-temp">
 				<span class="date">${dayAndMonth}</span>
-				<span class="temp">30°C</span>
+				<span class="temp">30 °C</span>
 			</div>
 		`;
 		divDay.className = "day";
+		//divDay.name = el; // el for ex. = 2018-04-25;
+		divDay.onclick = showHourlyTemp.bind(null, daysFromApi, el);
+		/*Trzeba przypisać do onclicka funkcję! A nie ją wywołać!! Jak tu: showHourlyTemp(el).. 
+		Bind umożliwia przypisanie funkcji do zdarzenia z odpowiednim argumentem bez wywołania!!
+		Przypisać funkcji w ten sposób: ... = showHourlyTemp; też nie można bo nie przekazujemy potrzebnego nam argumentu. Ewentualnie można przypisać do onclicka funkcję strzałkową: () => showHourlyTemp(el); która po wykonaniu onclicka się wykona wywołując naszą funkcję z odpowiednim argumentem.
+		*/
 		return divDay;
 	});
 	console.log("[daylist]",daylist)
 	return daylist;
 }
 
-const renderDaylist = (array) => {
-	console.log("argue of renderDaylist", array);
-	const daylistDiv = document.createElement("div");
+const showHourlyTemp = (daysFromApi, date) => {
+	renderDivlist(createHourBoxes(daysFromApi, date), "hourlist");
+	console.log("date",date);
+}
+
+const createHourBoxes = (objectFromApi, date) => {
+	console.log("objectFromApi",objectFromApi)
+	const day = Object.keys(objectFromApi); //tablica kluczy jako dni
+	const hourAndTempList = objectFromApi[date].map(el => {
+		const hours = el.dt_txt.split(" ")[1].split(":", 2);
+		const temp = Math.round(el.main.temp -273.15);
+		const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
+		
+		const divHourBox = document.createElement("div");
+		divHourBox.innerHTML = `
+		<span class="hour">${hourAndTemp.hour}</span>
+		<span class="hour-temp">${hourAndTemp.celsius} °C</span>
+		`
+		divHourBox.className = "hour-box";
+		return divHourBox;
+	})
+	return hourAndTempList;
+}
+
+const renderDivlist = (array, nameOfList) => {
+	console.log("argues of renderDivlist", "array",array,"nameOfList",nameOfList );
+	const divList = document.createElement("div");
        array.forEach((element) =>{
-           daylistDiv.appendChild(element);
+           divList.appendChild(element);
        });
-    daylistDiv.className = 'daylist';
-    const daylist = document.getElementsByClassName("daylist")[0];
-    daylist.parentNode.replaceChild(daylistDiv, daylist);
+    divList.className = nameOfList;
+    const list = document.getElementsByClassName(nameOfList)[0];
+    list.parentNode.replaceChild(divList, list);
 }
 
 let fetchWeather = (city)=>{
@@ -170,8 +201,10 @@ let fetchWeather = (city)=>{
 		const parsed = parse(mockedData);
 		const dayBoxes = createDayBoxes(parsed);
 		console.log("dayBoxes", dayBoxes);
-		const daylist =  renderDaylist(dayBoxes);
+		const daylist =  renderDivlist(dayBoxes, "daylist");
 		console.log("daylist", daylist);
+		const hourBoxes = createHourBoxes(parsed);
+		const hourlist = renderDivlist(hourBoxes, "hourlist");
 		return parsed;
 	})
     
