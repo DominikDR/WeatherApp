@@ -73,7 +73,7 @@ html, body {
 	cursor: pointer;
 }
 .selected-tab {
-	background-color: #e0e0e0;
+	background-color: #d3d3d3;
 }
 
 .date-and-temp {

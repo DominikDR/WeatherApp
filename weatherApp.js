@@ -129,7 +129,7 @@ const parse = (jsonObject) => {
 //2018-02-12 12.02
 const createDayBoxes = (daysFromApi) => {
 	console.log("daysFromApi", daysFromApi);
-	const daylist = Object.keys(daysFromApi).map(el => {
+	const daylist = Object.keys(daysFromApi).map((el,index) => {
 		const dates = el.split("-");
 		const dayAndMonth = `${dates[2]}.${dates[1]}`;
 		const divDay = document.createElement("div");
@@ -141,19 +141,27 @@ const createDayBoxes = (daysFromApi) => {
 			</div>
 		`;
 		divDay.className = "day";
-		//divDay.name = el; // el for ex. = 2018-04-25;
-		divDay.onclick = showHourlyTemp.bind(null, daysFromApi, el);
-		/*Trzeba przypisać do onclicka funkcję! A nie ją wywołać!! Jak tu: showHourlyTemp(el).. 
+		divDay.onclick = showHourlyTemp.bind(null, daysFromApi, el, divDay);
+		//divDay.name = el; el for ex. = 2018-04-25;
+		/*Trzeba przypisać do onclicka funkcję! A nie ją wywołać(!!) jak tu: showHourlyTemp(el).. 
 		Bind umożliwia przypisanie funkcji do zdarzenia z odpowiednim argumentem bez wywołania!!
 		Przypisać funkcji w ten sposób: ... = showHourlyTemp; też nie można bo nie przekazujemy potrzebnego nam argumentu. Ewentualnie można przypisać do onclicka funkcję strzałkową: () => showHourlyTemp(el); która po wykonaniu onclicka się wykona wywołując naszą funkcję z odpowiednim argumentem.
 		*/
+		if(index===0) {
+			showHourlyTemp(daysFromApi, el, divDay);
+		}
 		return divDay;
 	});
 	console.log("[daylist]",daylist)
 	return daylist;
 }
 
-const showHourlyTemp = (daysFromApi, date) => {
+const showHourlyTemp = (daysFromApi, date, divDay) => {
+	const div = document.getElementsByClassName("selected-tab")[0];
+	if (div !== undefined) {
+		div.classList.remove('selected-tab');
+	}
+	divDay.classList.add('selected-tab');
 	renderDivlist(createHourBoxes(daysFromApi, date), "hourlist");
 	console.log("date",date);
 }
@@ -202,7 +210,6 @@ let fetchWeather = (city)=>{
 		const dayBoxes = createDayBoxes(parsed);
 		console.log("dayBoxes", dayBoxes);
 		const daylist =  renderDivlist(dayBoxes, "daylist");
-		console.log("daylist", daylist);
 		const hourBoxes = createHourBoxes(parsed);
 		const hourlist = renderDivlist(hourBoxes, "hourlist");
 		return parsed;
