@@ -92,7 +92,7 @@ html, body {
 
 .hourlist {
 	display: flex;
-	overflow-x: auto;
+	overflow-x: visible;
 }
 
 .hour-box {

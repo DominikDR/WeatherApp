@@ -1,3 +1,5 @@
+const KELWIN_DIFF = 273.15;
+
 let apiAnswer;
 let searchBar = document.getElementsByName("area")[0];
 searchBar.addEventListener("keypress", (event)=> {
@@ -14,10 +16,14 @@ const search = ()=> {
 	.catch(error => 
 		console.log("Błąd sieci lub serwera. \nFunkcja catch przechwyciła następujące logi błędów: ", error))
 	.then(data => {
-        apiAnswer = data;
-        console.log(data, "data")
+		const dayBoxes = createDayBoxes(data);
+		renderDivlist(dayBoxes, "daylist");
+		const hourBoxes = createHourBoxes(Object.values(data)[0]);
+		renderDivlist(hourBoxes, "hourlist");
+        /*apiAnswer = data;
+		console.log("data", data)
         const cityFromApi = data.query.results.channel.location.city;
-        document.getElementsByClassName("city")[0].innerText = `Weather for: ${cityFromApi}`;
+        document.getElementsByClassName("city")[0].innerText = `Weather for: ${cityFromApi}`;*/
         /*renderWeatherContent(filterData(data));
         
         windButton.classList.remove('selected-tab');
@@ -29,6 +35,7 @@ const search = ()=> {
 		console.log("Błąd danych.", error)
 	});
 }
+
 /*
 let filterData = (dataFromApi)=> {
     const forecasts = dataFromApi.query.results.channel.item.forecast;
@@ -128,52 +135,64 @@ const parse = (jsonObject) => {
 }
 //2018-02-12 12.02
 const createDayBoxes = (daysFromApi) => {
-	console.log("daysFromApi", daysFromApi);
-	const daylist = Object.keys(daysFromApi).map((el,index) => {
-		const dates = el.split("-");
+	const daylist = Object.entries(daysFromApi).map(([key, hours], index) => {
+		console.log("dayyy", hours)
+		const temperatures = hours.map(element => {
+			return element.main.temp - KELWIN_DIFF;
+		})
+		
+		const mainhour = getWeatherDayIcon(hours);
+		log("mainhour", mainhour);
+		
+		const averageDayTemp = Math.round(temperatures.reduce((sum, currValue) => {
+			return sum + currValue
+		}, 0) / temperatures.length);
+		const dates = key.split("-");
 		const dayAndMonth = `${dates[2]}.${dates[1]}`;
 		const divDay = document.createElement("div");
 		divDay.innerHTML = `
 			<span class="meteoicon" data-icon="B"></span>
 			<div class="date-and-temp">
 				<span class="date">${dayAndMonth}</span>
-				<span class="temp">30 °C</span>
+				<span class="temp">${averageDayTemp} °C</span>
 			</div>
 		`;
 		divDay.className = "day";
-		divDay.onclick = showHourlyTemp.bind(null, daysFromApi, el, divDay);
+		divDay.onclick = handleDayClick.bind(null, hours, divDay);
 		//divDay.name = el; el for ex. = 2018-04-25;
 		/*Trzeba przypisać do onclicka funkcję! A nie ją wywołać(!!) jak tu: showHourlyTemp(el).. 
 		Bind umożliwia przypisanie funkcji do zdarzenia z odpowiednim argumentem bez wywołania!!
 		Przypisać funkcji w ten sposób: ... = showHourlyTemp; też nie można bo nie przekazujemy potrzebnego nam argumentu. Ewentualnie można przypisać do onclicka funkcję strzałkową: () => showHourlyTemp(el); która po wykonaniu onclicka się wykona wywołując naszą funkcję z odpowiednim argumentem.
 		*/
-		if(index===0) {
-			showHourlyTemp(daysFromApi, el, divDay);
-		}
+		if(index === 0) selectDay(divDay);
+		
 		return divDay;
 	});
-	console.log("[daylist]",daylist)
 	return daylist;
 }
 
-const showHourlyTemp = (daysFromApi, date, divDay) => {
-	const div = document.getElementsByClassName("selected-tab")[0];
-	if (div !== undefined) {
-		div.classList.remove('selected-tab');
+const selectDay = (divDay) => {
+	const currentlySelectedDay = document.getElementsByClassName("selected-tab")[0];
+	if (currentlySelectedDay) {
+		currentlySelectedDay.classList.remove('selected-tab');
 	}
 	divDay.classList.add('selected-tab');
-	renderDivlist(createHourBoxes(daysFromApi, date), "hourlist");
-	console.log("date",date);
 }
 
-const createHourBoxes = (objectFromApi, date) => {
-	console.log("objectFromApi",objectFromApi)
-	const day = Object.keys(objectFromApi); //tablica kluczy jako dni
-	const hourAndTempList = objectFromApi[date].map(el => {
+const showHourlyTemp = (day) => {
+	renderDivlist(createHourBoxes(day), "hourlist");
+}
+
+const handleDayClick = (day, divDay) => {
+	selectDay(divDay);
+	showHourlyTemp(day);
+}
+
+const createHourBoxes = (day) => {
+	const hourAndTempList = day.map(el => {
 		const hours = el.dt_txt.split(" ")[1].split(":", 2);
-		const temp = Math.round(el.main.temp -273.15);
+		const temp = Math.round(el.main.temp - KELWIN_DIFF);
 		const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
-		
 		const divHourBox = document.createElement("div");
 		divHourBox.innerHTML = `
 		<span class="hour">${hourAndTemp.hour}</span>
@@ -185,10 +204,9 @@ const createHourBoxes = (objectFromApi, date) => {
 	return hourAndTempList;
 }
 
-const renderDivlist = (array, nameOfList) => {
-	console.log("argues of renderDivlist", "array",array,"nameOfList",nameOfList );
+const renderDivlist = (htmlElements, nameOfList) => {
 	const divList = document.createElement("div");
-       array.forEach((element) =>{
+       htmlElements.forEach((element) =>{
            divList.appendChild(element);
        });
     divList.className = nameOfList;
@@ -202,16 +220,10 @@ let fetchWeather = (city)=>{
     return fetch(requestUrl, {
         method: 'get'
     }).then((response)=> {
-        console.log("data", response);
         return response.json(); //fetch zwraca obiekt response, a potem w wykonujemy funkcję json zawartą w prototypie tego response, żeby dostać potrzebne dane. json() tylko je wyciąga, a ich konkwersja dzieje się pod spodem
     }).catch(error => {
 		console.log("mockedData", mockedData);
 		const parsed = parse(mockedData);
-		const dayBoxes = createDayBoxes(parsed);
-		console.log("dayBoxes", dayBoxes);
-		const daylist =  renderDivlist(dayBoxes, "daylist");
-		const hourBoxes = createHourBoxes(parsed);
-		const hourlist = renderDivlist(hourBoxes, "hourlist");
 		return parsed;
 	})
     
