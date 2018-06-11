@@ -141,8 +141,8 @@ const createDayBoxes = (daysFromApi) => {
 			return element.main.temp - KELWIN_DIFF;
 		})
 		
-		const mainhour = getWeatherDayIcon(hours);
-		log("mainhour", mainhour);
+		const properIcon = getWeatherDayIcon(hours);
+		log("properIcon", properIcon);
 		
 		const averageDayTemp = Math.round(temperatures.reduce((sum, currValue) => {
 			return sum + currValue
@@ -151,7 +151,7 @@ const createDayBoxes = (daysFromApi) => {
 		const dayAndMonth = `${dates[2]}.${dates[1]}`;
 		const divDay = document.createElement("div");
 		divDay.innerHTML = `
-			<span class="meteoicon" data-icon="B"></span>
+			<span class="meteoicon" data-icon=${properIcon}></span>
 			<div class="date-and-temp">
 				<span class="date">${dayAndMonth}</span>
 				<span class="temp">${averageDayTemp} °C</span>

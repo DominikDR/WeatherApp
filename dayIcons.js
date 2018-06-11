@@ -13,37 +13,52 @@ const getMainHours = (hours) => {
 	return mainHours;
 }
 
-const getWeatherDayIcon = (hours) => { //bedzie zwracac ikonke dla danego dnia
+const getWeatherDayIcon = (hours) => {
 	let mainHours = getMainHours(hours);
+	
+	const groupWeatherCodes = (mainHours)=> {
+		const groupedCodes = mainHours.reduce((currentSum, currentValue) => {
+			const weatherCode = currentValue.weather[0].id;
+			if(currentSum[weatherCode]) {
+				++currentSum[weatherCode];
+			} else {
+				currentSum[weatherCode] = 1;
+			}
+			return currentSum;
+		},{});
+		return groupedCodes;
+	}
+	const mostFrequentCode = (groupWeatherCodes) => { 
+		const mostFrequent = Object.entries(groupWeatherCodes)
+			.reduce(( currSum, [weatherCode, frequency] ) => {
+			currSum.push({ weatherCode, frequency })
+			return currSum;
+			},[])
+			.reduce((previousVal, currVal) => (previousVal.frequency > currVal.frequency) ? previousVal : currVal).weatherCode;
+			return mostFrequent;
+	}
+	
 	if(mainHours.length === 0) {
 		mainHours = hours;
+		return iconCode.night[mostFrequentCode(groupWeatherCodes(mainHours))]
 	};
 	
 	
-	
 	const isStorm = checkIfHoursHaveWeather(mainHours, 2)
-	if(isStorm) return 'Pieruny';
+	if(isStorm) return iconCode.day[200];
 	
 	const isSnow = checkIfHoursHaveWeather(mainHours, 6)
-	if(isSnow) return 'Śnieżek';
+	if(isSnow) return iconCode.day[600];
 	
-	const isRainy = checkIfHoursHaveWeather(mainHours, 8)
-	if(isRainy) return 'Deszcz';
+	const isRainy = checkIfHoursHaveWeather(mainHours, 5)
+	if(isRainy) return iconCode.day[500];
 	
 	const isDrizzle = checkIfHoursHaveWeather(mainHours, 3)
-	if(isDrizzle) return 'Deszczyk';
+	if(isDrizzle) return iconCode.day[300];
 	
-	const groupWeatherCodes = mainHours.reduce((currentSum, currentValue) => {
-		const weatherCode = currentValue.weather[0].id;
-		if(currentSum[weatherCode]) {
-			++currentSum[weatherCode];	
-		} else {
-			currentSum[weatherCode] = 1
-		};
-		return currentSum;
-	},{})
-	log("groupWeatherCodes", groupWeatherCodes)
-};
+	
+	return iconCode.day[mostFrequentCode(groupWeatherCodes(mainHours))];
+}
 
 const checkIfHoursHaveWeather = (hours, weatherCode) => {
 	return (
@@ -52,4 +67,3 @@ const checkIfHoursHaveWeather = (hours, weatherCode) => {
 		)
 	)? true : false;
 }
-
