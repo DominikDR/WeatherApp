@@ -12,31 +12,31 @@ const getMainHours = (hours) => {
 	});
 	return mainHours;
 }
+const groupWeatherCodes = (mainHours)=> {
+	const groupedCodes = mainHours.reduce((currentSum, currentValue) => {
+		const weatherCode = currentValue.weather[0].id;
+		if(currentSum[weatherCode]) {
+			++currentSum[weatherCode];
+		} else {
+			currentSum[weatherCode] = 1;
+		}
+		return currentSum;
+	},{});
+	return groupedCodes;
+}
+
+const mostFrequentCode = (groupedWeatherCodes) => {
+	console.log("groupedWeatherCodes", groupedWeatherCodes)
+	console.log("objectentries", Object.entries(groupedWeatherCodes))
+	const mostFrequent = Object.entries(groupedWeatherCodes)
+		.reduce((previousVal, currVal) => (
+			previousVal[1] > currVal[1] ? previousVal : currVal
+		));
+	return mostFrequent[0];
+}
 
 const getWeatherDayIcon = (hours) => {
 	let mainHours = getMainHours(hours);
-	
-	const groupWeatherCodes = (mainHours)=> {
-		const groupedCodes = mainHours.reduce((currentSum, currentValue) => {
-			const weatherCode = currentValue.weather[0].id;
-			if(currentSum[weatherCode]) {
-				++currentSum[weatherCode];
-			} else {
-				currentSum[weatherCode] = 1;
-			}
-			return currentSum;
-		},{});
-		return groupedCodes;
-	}
-	const mostFrequentCode = (groupWeatherCodes) => { 
-		const mostFrequent = Object.entries(groupWeatherCodes)
-			.reduce(( currSum, [weatherCode, frequency] ) => {
-			currSum.push({ weatherCode, frequency })
-			return currSum;
-			},[])
-			.reduce((previousVal, currVal) => (previousVal.frequency > currVal.frequency) ? previousVal : currVal).weatherCode;
-			return mostFrequent;
-	}
 	
 	if(mainHours.length === 0) {
 		mainHours = hours;
@@ -57,13 +57,16 @@ const getWeatherDayIcon = (hours) => {
 	if(isDrizzle) return iconCode.day[300];
 	
 	
+	log("groupWeatherCodes", groupWeatherCodes(mainHours))
+	log("mostFrequentCode", mostFrequentCode(groupWeatherCodes(mainHours)))
+	
 	return iconCode.day[mostFrequentCode(groupWeatherCodes(mainHours))];
 }
 
 const checkIfHoursHaveWeather = (hours, weatherCode) => {
 	return (
 		hours.find((hour) => 
-		`${hour.weather[0].id}`.startsWith(weatherCode)
+			`${hour.weather[0].id}`.startsWith(weatherCode)
 		)
 	)? true : false;
 }
