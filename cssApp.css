@@ -1,7 +1,7 @@
 html, body {
 	height: 100%;
     font-family: arial;
-    background-color: #f4f4f4;
+    background-color: #f7f7f7;
 	margin: 0;
 	padding: 0;
 }
@@ -49,31 +49,53 @@ html, body {
 	color: #555555;
 }
 
+#background {
+	display: flex;
+	justify-content: center;
+	background-size: 100% 100%;
+	padding: 100px 50px 0;
+}
+
 .container {
-	height: 100%;
-	padding: 50px;
-    margin: 50px;
-    background-color: #fdfdfd;
+	overflow-x: auto;
 }
 
 .daylist {
 	display: flex;
 	overflow-x: auto;
+	overflow-y: hidden;
+	min-height: 140px;
 }
+
 .day {
 	display: flex;
 	flex-shrink: 0;
-	border: 1px solid #000000;
+	position: relative;
+	top: 40px;
 	height: 60px;
 	width: 120px;
 	padding: 20px;
+	border-right: 1px solid #d3d3d3;
 	user-select: none;
-}
-.day:hover {
+	background-color: #fdfdfd;
 	cursor: pointer;
 }
+.day:last-child {
+	border-right: none;
+}
+.day:hover .meteoicon{
+	transform: scale(1.2);
+	transition: all 0.2s linear;
+}
+
 .selected-tab {
-	background-color: #d3d3d3;
+	position: relative;
+	top: 0px;
+	width: 200px;
+	height: 100px;
+}
+.selected-tab .meteoicon{
+	transform: scale(1.2);
 }
 
 .date-and-temp {
@@ -89,10 +111,13 @@ html, body {
 	color: #4e4e4e;
     font-size: 50px;
 }
+/*sun color #fdc400*/
 
 .hourlist {
 	display: flex;
-	overflow-x: visible;
+	overflow-x: auto;
+	border-top: 7px solid #d3d3d3;
+	background-color: #fdfdfd;
 }
 
 .hour-box {
@@ -100,62 +125,12 @@ html, body {
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
-	border: 1px solid #000000;
+	border-right: 1px solid #d3d3d3;
 	height: 300px;
 	width: 70px;
+	cursor: pointer;
 }
-
-/*
-
-.city {
-    display: flex;
-    justify-content: center;
-    font-size: 25px;
-    margin: 10px;
-}
-
-.item {
-    display: flex;
-    width: 30%;
-    margin-bottom: 1vh;
-    border: 1px solid #cccccc;
-    border-right: 50%;
-}
-.item:first-child {
-    background-color: #ffeac8;
-}
-.item:last-child {
-    margin-bottom: 0;
-}
-.date {
-    font-size: 1.1em;
-}
-.weather {
-    font-size: 1.1em;
-    display: inline-block;
-}
-.wind.item{
-    border-radius: 2px;
-}
-
-.weather-button, .wind-button {
-    width: 10%;
-    text-align: center;
-    display: inline-block;
-    font-size: 1.3em;
-    border: 3px outset #e0bd00;
-    border-radius: 7px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    padding: 0.2em;
-}
-.selected-tab {
-    background-color: #ffeac8;
-    background-color: #ead6b6; 
-    border: 3px inset #b7aa03;
-}
-*/
-
-.search-icon {
-	color: white;
+.hour-box:hover .meteoicon{
+	transform: scale(1.2);
+	transition: all 0.2s linear;
 }

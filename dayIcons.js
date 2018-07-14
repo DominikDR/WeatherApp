@@ -1,4 +1,3 @@
-let log = console.log.bind(console);
 const parseHour = (hour) => {
 	const splittedHour = hour.dt_txt.split(" ")[1].split(":")[0];
 	return parseInt(splittedHour, 10);
@@ -22,12 +21,11 @@ const groupWeatherCodes = (mainHours)=> {
 		}
 		return currentSum;
 	},{});
+	
 	return groupedCodes;
 }
 
 const mostFrequentCode = (groupedWeatherCodes) => {
-	console.log("groupedWeatherCodes", groupedWeatherCodes)
-	console.log("objectentries", Object.entries(groupedWeatherCodes))
 	const mostFrequent = Object.entries(groupedWeatherCodes)
 		.reduce((previousVal, currVal) => (
 			previousVal[1] > currVal[1] ? previousVal : currVal
@@ -37,30 +35,40 @@ const mostFrequentCode = (groupedWeatherCodes) => {
 
 const getWeatherDayIcon = (hours) => {
 	let mainHours = getMainHours(hours);
+	let dayOrNightIcon = mainHours.length === 0 ? iconCode.night : iconCode.day;
 	
 	if(mainHours.length === 0) {
 		mainHours = hours;
-		return iconCode.night[mostFrequentCode(groupWeatherCodes(mainHours))]
 	};
 	
-	
 	const isStorm = checkIfHoursHaveWeather(mainHours, 2)
-	if(isStorm) return iconCode.day[200];
+	if(isStorm) return {
+		weatherCode: 200,
+		weatherIcon: dayOrNightIcon[200]
+	};
 	
 	const isSnow = checkIfHoursHaveWeather(mainHours, 6)
-	if(isSnow) return iconCode.day[600];
+	if(isSnow) return {
+		weatherCode: 600, 
+		weatherIcon: dayOrNightIcon[600]
+	};
 	
 	const isRainy = checkIfHoursHaveWeather(mainHours, 5)
-	if(isRainy) return iconCode.day[500];
+	if(isRainy) return {
+		weatherCode: 500,
+		weatherIcon: dayOrNightIcon[500]
+	};
 	
 	const isDrizzle = checkIfHoursHaveWeather(mainHours, 3)
-	if(isDrizzle) return iconCode.day[300];
+	if(isDrizzle) return {
+		weatherCode: 300,
+		weatherIcon: dayOrNightIcon[300]
+	};
 	
+	const weatherCode = mostFrequentCode(groupWeatherCodes(mainHours));
+	const weatherIcon= dayOrNightIcon[weatherCode];
 	
-	log("groupWeatherCodes", groupWeatherCodes(mainHours))
-	log("mostFrequentCode", mostFrequentCode(groupWeatherCodes(mainHours)))
-	
-	return iconCode.day[mostFrequentCode(groupWeatherCodes(mainHours))];
+	return { weatherCode, weatherIcon };
 }
 
 const checkIfHoursHaveWeather = (hours, weatherCode) => {

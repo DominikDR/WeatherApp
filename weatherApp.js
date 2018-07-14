@@ -16,9 +16,10 @@ const search = ()=> {
 	.catch(error => 
 		console.log("Błąd sieci lub serwera. \nFunkcja catch przechwyciła następujące logi błędów: ", error))
 	.then(data => {
-		const dayBoxes = createDayBoxes(data);
+		const parsedData = parse(data);
+		const dayBoxes = createDayBoxes(parsedData);
 		renderDivlist(dayBoxes, "daylist");
-		const hourBoxes = createHourBoxes(Object.values(data)[0]);
+		const hourBoxes = createHourBoxes(Object.values(parsedData)[0]);
 		renderDivlist(hourBoxes, "hourlist");
         /*apiAnswer = data;
 		console.log("data", data)
@@ -136,13 +137,11 @@ const parse = (jsonObject) => {
 //2018-02-12 12.02
 const createDayBoxes = (daysFromApi) => {
 	const daylist = Object.entries(daysFromApi).map(([key, hours], index) => {
-		console.log("dayyy", hours)
 		const temperatures = hours.map(element => {
 			return element.main.temp - KELWIN_DIFF;
 		})
 		
 		const properIcon = getWeatherDayIcon(hours);
-		log("properIcon", properIcon);
 		
 		const averageDayTemp = Math.round(temperatures.reduce((sum, currValue) => {
 			return sum + currValue
@@ -151,7 +150,7 @@ const createDayBoxes = (daysFromApi) => {
 		const dayAndMonth = `${dates[2]}.${dates[1]}`;
 		const divDay = document.createElement("div");
 		divDay.innerHTML = `
-			<span class="meteoicon" data-icon=${properIcon}></span>
+			<span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
 			<div class="date-and-temp">
 				<span class="date">${dayAndMonth}</span>
 				<span class="temp">${averageDayTemp} °C</span>
@@ -164,7 +163,10 @@ const createDayBoxes = (daysFromApi) => {
 		Bind umożliwia przypisanie funkcji do zdarzenia z odpowiednim argumentem bez wywołania!!
 		Przypisać funkcji w ten sposób: ... = showHourlyTemp; też nie można bo nie przekazujemy potrzebnego nam argumentu. Ewentualnie można przypisać do onclicka funkcję strzałkową: () => showHourlyTemp(el); która po wykonaniu onclicka się wykona wywołując naszą funkcję z odpowiednim argumentem.
 		*/
-		if(index === 0) selectDay(divDay);
+		if(index === 0) {
+			selectDay(divDay);
+			setBackground(properIcon.weatherCode)
+		};
 		
 		return divDay;
 	});
@@ -186,6 +188,7 @@ const showHourlyTemp = (day) => {
 const handleDayClick = (day, divDay) => {
 	selectDay(divDay);
 	showHourlyTemp(day);
+	setBackground(getWeatherDayIcon(day).weatherCode)
 }
 
 const createHourBoxes = (day) => {
@@ -193,10 +196,15 @@ const createHourBoxes = (day) => {
 		const hours = el.dt_txt.split(" ")[1].split(":", 2);
 		const temp = Math.round(el.main.temp - KELWIN_DIFF);
 		const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
+		
+		const properIcon = getWeatherDayIcon([el]);
+		
 		const divHourBox = document.createElement("div");
+		
 		divHourBox.innerHTML = `
-		<span class="hour">${hourAndTemp.hour}</span>
-		<span class="hour-temp">${hourAndTemp.celsius} °C</span>
+			<span class="hour">${hourAndTemp.hour}</span>
+			<span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
+			<span class="hour-temp">${hourAndTemp.celsius} °C</span>
 		`
 		divHourBox.className = "hour-box";
 		return divHourBox;
@@ -206,25 +214,26 @@ const createHourBoxes = (day) => {
 
 const renderDivlist = (htmlElements, nameOfList) => {
 	const divList = document.createElement("div");
-       htmlElements.forEach((element) =>{
-           divList.appendChild(element);
-       });
+	htmlElements.forEach((element) =>{
+	   divList.appendChild(element);
+	});
     divList.className = nameOfList;
     const list = document.getElementsByClassName(nameOfList)[0];
     list.parentNode.replaceChild(divList, list);
 }
 
 let fetchWeather = (city)=>{
-/*    const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=26c42f8b8305b74545f93ce538ad2356`;*/
-	const requestUrl = `dupadupadupadupadupadupadupa`;
+    const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&APPID=26c42f8b8305b74545f93ce538ad2356`;
     return fetch(requestUrl, {
         method: 'get'
     }).then((response)=> {
         return response.json(); //fetch zwraca obiekt response, a potem w wykonujemy funkcję json zawartą w prototypie tego response, żeby dostać potrzebne dane. json() tylko je wyciąga, a ich konkwersja dzieje się pod spodem
     }).catch(error => {
-		console.log("mockedData", mockedData);
+		console.error("error", error);
+		return error;
+		/*console.log("mockedData", mockedData);
 		const parsed = parse(mockedData);
-		return parsed;
+		return parsed;*/
 	})
     
     /* Zamiast zwykłego XHR, stosuje się funkcję fetch, która domyślnie zwraca Promise, a wszystkie funkcje z promisa starego robi pod spodem:)
