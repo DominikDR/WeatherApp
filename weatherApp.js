@@ -1,4 +1,6 @@
 const KELWIN_DIFF = 273.15;
+const METERS_TO_KILOMETER = 0.001;
+const SECONDS_TO_HOUR = 1/3600;
 
 let apiAnswer;
 let searchBar = document.getElementsByName("area")[0];
@@ -105,24 +107,9 @@ const renderWindContent = ()=> {
 
 const button = document.getElementsByClassName("searchButton")[0];
 button.addEventListener("click", search);
-/*
-
-const weatherButton = document.getElementsByClassName("weather-button")[0];
-const windButton = document.getElementsByClassName("wind-button")[0];
-*/
-/*
-
-weatherButton.addEventListener("click", ()=>{
-    windButton.classList.remove("selected-tab");
-    weatherButton.classList.add("selected-tab");
-    renderWeatherContent(filterData(apiAnswer));
-})
-windButton.addEventListener("click", renderWindContent);
-*/
 
 //zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
 //zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
-
 
 const parse = (jsonObject) => {
 	const parsed = jsonObject.list.reduce((currentSum, currentValue) =>{
@@ -192,20 +179,47 @@ const handleDayClick = (day, divDay) => {
 }
 
 const createHourBoxes = (day) => {
-	const hourAndTempList = day.map(el => {
+	const hourAndTempList = day.map((el, index) => {
 		const hours = el.dt_txt.split(" ")[1].split(":", 2);
 		const temp = Math.round(el.main.temp - KELWIN_DIFF);
 		const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
 		
 		const properIcon = getWeatherDayIcon([el]);
 		
+		const accordionHeadline = el.weather[0].description;
+		const windSpeed = Math.round(el.wind.speed*(METERS_TO_KILOMETER/SECONDS_TO_HOUR));
+		const pressure = Math.round(el.main.pressure);
 		const divHourBox = document.createElement("div");
-		
 		divHourBox.innerHTML = `
-			<span class="hour">${hourAndTemp.hour}</span>
-			<span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
-			<span class="hour-temp">${hourAndTemp.celsius} °C</span>
-		`
+			<label class="hour-tab" for="h-${index}">
+				<span class="hour">${hourAndTemp.hour}</span>
+				<span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
+				<span class="hour-temp">${hourAndTemp.celsius} °C</span>
+			</label>
+			<div class="in-hour-tab-accordion">
+				<span class="accordion-head">${accordionHeadline}</span>
+				<div class="accordion-pressure">
+					<div class="accordion-tag">
+						<span class="accordion-label">Pressure </span>
+						<span class="accordion-data">${pressure} hPa</span>
+					</div>
+				</div>
+				<div class="accordion-humidity">
+					<div class="accordion-tag">
+						<span class="accordion-label">Humidity </span>
+						<span class="accordion-data">${el.main.humidity } %</span>
+					</div>
+				</div>
+				<div class="accordion-wind-speed">
+					<div class="accordion-tag">
+						<span class="accordion-label">Wind speed </span>
+						<span class="accordion-data">${windSpeed} km/h</span>
+					</div>
+				</div>				
+			</div>
+		`;
+		/*createAccordionContent(day, divHourBox);*/
+		divHourBox.tabIndex = "1";
 		divHourBox.className = "hour-box";
 		return divHourBox;
 	})

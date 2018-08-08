@@ -54,10 +54,12 @@ html, body {
 	justify-content: center;
 	background-size: 100% 100%;
 	padding: 100px 50px 0;
+	transition: all 0.4s ease-in-out;
 }
 
 .container {
 	overflow-x: auto;
+	box-sizing: border-box;
 }
 
 .daylist {
@@ -79,6 +81,7 @@ html, body {
 	user-select: none;
 	background-color: #fdfdfd;
 	cursor: pointer;
+	transition: all 0.2s linear;
 }
 .day:last-child {
 	border-right: none;
@@ -93,6 +96,7 @@ html, body {
 	top: 0px;
 	width: 200px;
 	height: 100px;
+	box-shadow: inset 0 5px rgba(255, 0, 0, 0.75);
 }
 .selected-tab .meteoicon{
 	transform: scale(1.2);
@@ -122,6 +126,10 @@ html, body {
 
 .hour-box {
 	display: flex;
+	outline: 0 none;
+}
+.hour-tab {
+	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
@@ -130,7 +138,50 @@ html, body {
 	width: 70px;
 	cursor: pointer;
 }
-.hour-box:hover .meteoicon{
+.hour-tab:hover .meteoicon{
 	transform: scale(1.2);
 	transition: all 0.2s linear;
+}
+.hour-box:focus {
+	box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
+}
+.hour-box:focus .meteoicon {
+	transform: scale(1.2);
+}
+.hour-box:focus .in-hour-tab-accordion {
+	width: 250px;
+	border-right: 1px solid #d3d3d3;
+	box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
+}
+
+.in-hour-tab-accordion {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	height: 300px;
+	width: 0px;
+	transition: all 0.45s ease-out;
+	background-color: #f9f8f7;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.accordion-head{
+	font-weight: bold;
+	color: #222222;
+	padding: 35px 15px 70px;
+}
+.accordion-head:first-letter {
+	text-transform: uppercase;
+}
+
+.accordion-tag {
+	padding: 5px 15px 0;
+}
+.accordion-label {
+	color: #5a5a5a;
+}
+.accordion-data {
+	font-weight: bold;
+	color: #222222;
 }
