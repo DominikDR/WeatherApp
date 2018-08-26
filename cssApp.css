@@ -1,187 +1,200 @@
 html, body {
-	height: 100%;
+    height: 100%;
     font-family: arial;
     background-color: #f7f7f7;
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .header {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: #075fab;
-	height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #075fab;
+    height: 50px;
+    padding: 0 5%;
 }
 
 .title {
-	font-size: 30px;
-	margin-right: 50px;
-	color: #ffffff;
-	letter-spacing: 1px;
+    font-size: 20px;
+    margin-right: 5%;
+    color: #ffffff;
+    letter-spacing: 1px;
 }
 
 .searchbar-box {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 30px;
-	
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 30px;
 }
 .search-input {
-	width: 400px;
-	height: 100%;
-	font-size: 16px;
-	padding-right: 40px;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    padding-right: 40px;
     padding-left: 10px;
 }
 .fa.searchButton {
-	position: absolute;
-	display: flex;
+    position: absolute;
+    display: flex;
     align-items: center;
     justify-content: center;
-	right: 0;
-	cursor: pointer;
-	height: 100%;
+    right: 0;
+    cursor: pointer;
+    height: 100%;
     width: 40px;
-	font-size: 20px;
-	color: #555555;
+    font-size: 20px;
+    color: #555555;
 }
 
 #background {
-	display: flex;
-	justify-content: center;
-	background-size: 100% 100%;
-	padding: 100px 50px 0;
-	transition: all 0.4s ease-in-out;
+    display: flex;
+    justify-content: center;
+    background-size: 100% 100%;
+    padding: 100px 25px 0;
+    transition: all 0.4s ease-in-out;
 }
 
 .container {
-	overflow-x: auto;
-	box-sizing: border-box;
+    display: grid;
+    overflow-x: auto;
+    box-sizing: border-box;
 }
 
 .daylist {
-	display: flex;
-	overflow-x: auto;
-	overflow-y: hidden;
-	min-height: 140px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 140px;
 }
 
 .day {
-	display: flex;
-	flex-shrink: 0;
-	position: relative;
-	top: 40px;
-	height: 60px;
-	width: 120px;
-	padding: 20px;
-	border-right: 1px solid #d3d3d3;
-	user-select: none;
-	background-color: #fdfdfd;
-	cursor: pointer;
-	transition: all 0.2s linear;
+    display: flex;
+    flex-shrink: 0;
+    position: relative;
+    top: 40px;
+    height: 60px;
+    width: 120px;
+    padding: 20px;
+    border-right: 1px solid #d3d3d3;
+    user-select: none;
+    background-color: #fdfdfd;
+    cursor: pointer;
+    transition: all 0.2s linear;
 }
 .day:last-child {
-	border-right: none;
+    border-right: none;
 }
 .day:hover .meteoicon{
-	transform: scale(1.2);
-	transition: all 0.2s linear;
+    transform: scale(1.2);
+    transition: all 0.2s linear;
 }
 
 .selected-tab {
-	position: relative;
-	top: 0px;
-	width: 200px;
-	height: 100px;
-	box-shadow: inset 0 5px rgba(255, 0, 0, 0.75);
+    position: relative;
+    top: 0px;
+    width: 200px;
+    height: 100px;
+    box-shadow: inset 0 5px rgba(255, 0, 0, 0.75);
 }
 .selected-tab .meteoicon{
-	transform: scale(1.2);
+    transform: scale(1.2);
 }
 
 .date-and-temp {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	justify-content: space-between;
-	align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 .meteoicon:before {
-	font-family: 'MeteoconsRegular';
-	content: attr(data-icon);
-	color: #4e4e4e;
+    font-family: 'MeteoconsRegular';
+    content: attr(data-icon);
+    color: #4e4e4e;
     font-size: 50px;
 }
 /*sun color #fdc400*/
 
 .hourlist {
-	display: flex;
-	overflow-x: auto;
-	border-top: 7px solid #d3d3d3;
-	background-color: #fdfdfd;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 300px;
+    border-top: 7px solid #d3d3d3;
+    background-color: #fdfdfd;
 }
 
 .hour-box {
-	display: flex;
-	outline: 0 none;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    outline: 0 none;
 }
 .hour-tab {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-	border-right: 1px solid #d3d3d3;
-	height: 300px;
-	width: 70px;
-	cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-right: 1px solid #d3d3d3;
+    width: 70px;
+    cursor: pointer;
 }
 .hour-tab:hover .meteoicon{
-	transform: scale(1.2);
-	transition: all 0.2s linear;
+    transform: scale(1.2);
+    transition: all 0.2s linear;
 }
 .hour-box:focus {
-	box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
+    box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
 }
 .hour-box:focus .meteoicon {
-	transform: scale(1.2);
+    transform: scale(1.2);
 }
 .hour-box:focus .in-hour-tab-accordion {
-	width: 250px;
-	border-right: 1px solid #d3d3d3;
-	box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
+    width: 250px;
+    border-right: 1px solid #d3d3d3;
+    box-shadow: inset 0 5px rgba(255, 137, 0, 0.75);
 }
 
 .in-hour-tab-accordion {
-	display: flex;
-	flex-direction: column;
-	box-sizing: border-box;
-	height: 300px;
-	width: 0px;
-	transition: all 0.45s ease-out;
-	background-color: #f9f8f7;
-	overflow: hidden;
-	white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 300px;
+    width: 0px;
+    transition: all 0.45s ease-out;
+    background-color: #f9f8f7;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .accordion-head{
-	font-weight: bold;
-	color: #222222;
-	padding: 35px 15px 70px;
+    font-weight: bold;
+    color: #222222;
+    padding: 35px 15px 70px;
 }
 .accordion-head:first-letter {
-	text-transform: uppercase;
+    text-transform: uppercase;
 }
 
 .accordion-tag {
-	padding: 5px 15px 0;
+    padding: 5px 15px 0;
 }
 .accordion-label {
-	color: #5a5a5a;
+    color: #5a5a5a;
 }
 .accordion-data {
-	font-weight: bold;
-	color: #222222;
+    font-weight: bold;
+    color: #222222;
 }
+
+@media screen and (min-width: 768px) {
+    .title {
+        font-size: 30px;
+    }
+    #background {
+        padding: 100px 50px 0;
+    }
+} 

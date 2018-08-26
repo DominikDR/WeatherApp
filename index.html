@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="ENG">
     <head>
-    <meta charset="UTF-8" />
-    <title>Weather in your city!</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather in your city!</title>
         <link rel="stylesheet" href="cssApp.css">
         <link rel="stylesheet" href="loader/loader.css">
-		<link rel="stylesheet" href="external/font-awesome-4.7.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="assets/meteocons-font/FONT/Font-face/stylesheet.css">
+        <link rel="stylesheet" href="external/font-awesome-4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="assets/meteocons-font/FONT/Font-face/stylesheet.css">
     </head>
     <body>
-		<div class="header">
-			<span class="title">Weather<b>App</b></span>
-			
-			<div class="searchbar-box">
-				<input class="search-input" type="text" name="area" placeholder="type here..."/>
-				<i name="submit" class="fa fa-search searchButton"></i>
-			</div>
-		</div>
+        <div class="header">
+            <span class="title">Weather<b>App</b></span>
+            
+            <div class="searchbar-box">
+                <input class="search-input" type="text" name="area" placeholder="type here..."/>
+                <i name="submit" class="fa fa-search searchButton"></i>
+            </div>
+        </div>
         <div class="city"></div>
-		<div id="background">
-			<div class="container">
-				<div class="daylist"></div>
-				<div class="hourlist"></div>
-			</div>
-		</div>
+        <div id="background">
+            <div class="container">
+                <div class="daylist"></div>
+                <div class="hourlist"></div>
+            </div>
+        </div>
         <script src="JSON-response.js"></script>
         <script src="Icons_Object.js"></script>
         <script src="background/setBackground.js"></script>
