@@ -21,7 +21,6 @@ const groupWeatherCodes = (mainHours)=> {
 		}
 		return currentSum;
 	},{});
-	
 	return groupedCodes;
 }
 

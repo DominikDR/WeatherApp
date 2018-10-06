@@ -1,6 +1,9 @@
 const KELWIN_DIFF = 273.15;
 const METERS_TO_KILOMETER = 0.001;
 const SECONDS_TO_HOUR = 1/3600;
+const daysOfWeek = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+
+toggleBackground();
 
 let apiAnswer;
 let searchBar = document.getElementsByName("area")[0];
@@ -67,15 +70,19 @@ const createDayBoxes = (daysFromApi) => {
         const averageDayTemp = Math.round(temperatures.reduce((sum, currValue) => {
             return sum + currValue
         }, 0) / temperatures.length);
+
+        const current = new Date(key);
+        const dayName = daysOfWeek[current.getDay()];
         const dates = key.split("-");
-        const dayAndMonth = `${dates[2]}.${dates[1]}`;
+        const dayAndMonth = dates[2].charAt(0) === '0' ? `${dates[2].charAt(1)}.${dates[1]}` : `${dates[2]}.${dates[1]}`;
+        
         const divDay = document.createElement("div");
         divDay.innerHTML = `
-            <span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
-            <div class="date-and-temp">
-                <span class="date">${dayAndMonth}</span>
-                <span class="temp">${averageDayTemp} °C</span>
-            </div>
+        <span class="meteoicon" data-icon=${properIcon.weatherIcon}></span>
+        <div class="date-and-temp">
+            <span class="date">${dayName} ${dayAndMonth}</span>
+            <span class="temp">${averageDayTemp} °C</span>
+        </div>
         `;
         divDay.className = "day";
         divDay.addEventListener("click", handleDayClick.bind(null, hours, divDay))
@@ -87,7 +94,7 @@ const createDayBoxes = (daysFromApi) => {
         */
         if(index === 0) {
             selectDay(divDay);
-            setBackground(properIcon.weatherCode)
+            toggleBackground(properIcon.weatherCode)
         };
         
         return divDay;
@@ -110,7 +117,7 @@ const showHourlyTemp = (day) => {
 const handleDayClick = (day, divDay) => {
     selectDay(divDay);
     showHourlyTemp(day);
-    setBackground(getWeatherDayIcon(day).weatherCode);
+    toggleBackground(getWeatherDayIcon(day).weatherCode);
 }
 
 const createHourBoxes = (day) => {
@@ -118,7 +125,7 @@ const createHourBoxes = (day) => {
         const hours = el.dt_txt.split(" ")[1].split(":", 2);
         const temp = Math.round(el.main.temp - KELWIN_DIFF);
         const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
-        
+
         const properIcon = getWeatherDayIcon([el]);
         
         const accordionHeadline = el.weather[0].description;
@@ -174,6 +181,7 @@ const renderDivlist = (htmlElements, nameOfList) => {
        divList.appendChild(element);
     });
     divList.className = nameOfList;
+    
     const list = document.getElementsByClassName(nameOfList)[0];
     list.parentNode.replaceChild(divList, list);
 }
@@ -187,9 +195,6 @@ let fetchWeather = (city)=>{
     }).catch(error => {
         console.error("error", error);
         return error;
-        /*console.log("mockedData", mockedData);
-        const parsed = parse(mockedData);
-        return parsed;*/
     })
     
     /* Zamiast zwykłego XHR, stosuje się funkcję fetch, która domyślnie zwraca Promise, a wszystkie funkcje z promisa starego robi pod spodem:)

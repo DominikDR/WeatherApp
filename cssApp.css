@@ -4,7 +4,10 @@ html, body {
     background-color: #f7f7f7;
     margin: 0;
     padding: 0;
+    background-repeat: no-repeat;
 }
+
+/* searchbar */
 
 .header {
     display: flex;
@@ -27,7 +30,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 450px;
+    width: 600px;
     height: 30px;
 }
 .search-input {
@@ -50,13 +53,62 @@ html, body {
     color: #555555;
 }
 
-#background {
+/* backgrounds */
+
+#initial-background {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: calc(100% - 50px);
+}
+#world-map-background {
+    position: absolute;
+    max-height: 100%;
+    filter: blur(1.5px);
+}
+#headline {
+    animation: enlargeText 0.7s ease-out;
+    position: absolute;
+    width: 50%;
+    margin: 0 auto;
+    /* max-width: max-content; */
+    top: 100px;
+    left: 0;
+    right: 0;
+    padding: 25px 25px;
+    background: hsla(0,0%,100%,.5);
+    font-size: 20px;
+    border-radius: 10px;
+    z-index: 1;
+    box-shadow: 5px 3px 30px #075fab;
+}
+@keyframes enlargeText {
+    from {
+        transform: translateY(-500px);
+    }
+    to {
+        transform: translateY(0);
+        transition: transform 0.7ms ease-in-out;
+    }
+}
+#headline span {
+    width: 100%;
+}
+
+.background {
     display: flex;
     justify-content: center;
     background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     padding: 100px 25px 0;
     transition: all 0.4s ease-in-out;
 }
+.hide-content {
+    display: none;
+}
+
+/* weather content */
 
 .container {
     display: grid;
@@ -77,7 +129,7 @@ html, body {
     position: relative;
     top: 40px;
     height: 60px;
-    width: 120px;
+    width: 130px;
     padding: 20px;
     border-right: 1px solid #d3d3d3;
     user-select: none;
@@ -196,6 +248,16 @@ html, body {
 @media screen and (min-width: 768px) {
     .title {
         font-size: 30px;
+    }
+
+    #initial-background {
+        padding: 0;
+    }
+
+    #headline {
+        top: 20%;
+        padding: 35px 35px;
+        font-size: 35px;
     }
     #background {
         padding: 100px 50px 0;
