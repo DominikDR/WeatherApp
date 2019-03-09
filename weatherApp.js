@@ -10,43 +10,29 @@ let searchBar = document.getElementsByName("area")[0];
 searchBar.addEventListener("keypress", (event)=> {
     const key = event.which || event.keyCode;
     if (key === 13) { // 13 is enter
-      search(); // code for enter
+      search(); 
     }
 })
 const search = ()=> {
     let city = searchBar.value;
-    
-    /*toggleButtonLoader(true, '<div class="loader"></div>', search);*/
+
     fetchWeather(city)
     .catch(error => 
-        console.log("Błąd sieci lub serwera. \nFunkcja catch przechwyciła następujące logi błędów: ", error))
+        console.log("Network or server error. \nError logs: ", error))
     .then(data => {
         const parsedData = parse(data);
         const dayBoxes = createDayBoxes(parsedData);
         renderDivlist(dayBoxes, "daylist");
         const hourBoxes = createHourBoxes(Object.values(parsedData)[0]);
         renderDivlist(hourBoxes, "hourlist");
-        /*apiAnswer = data;
-        console.log("data", data)
-        const cityFromApi = data.query.results.channel.location.city;
-        document.getElementsByClassName("city")[0].innerText = `Weather for: ${cityFromApi}`;*/
-        /*renderWeatherContent(filterData(data));
-        
-        windButton.classList.remove('selected-tab');
-        weatherButton.classList.add('selected-tab');*/
-        /*toggleButtonLoader(false, '', search);*/
     })
     .catch(error => {
-        /*toggleButtonLoader(false, '', search);*/
-        console.log("Błąd danych.", error)
+        console.error("Data error.", error)
     });
 }
 
 const button = document.getElementsByClassName("searchButton")[0];
 button.addEventListener("click", search);
-
-//zapukać do api i połączyć się z nim za pomocą XHR i promisów. Ew async await
-//zrobić listę danych: Miasto(nagłówek), niżej prognoza pogody na dziś, jutro, pojutrze w formacie `data-"rainy"`
 
 const parse = (jsonObject) => {
     const parsed = jsonObject.list.reduce((currentSum, currentValue) =>{
@@ -58,15 +44,15 @@ const parse = (jsonObject) => {
     }, {})
     return parsed;
 }
-//2018-02-12 12.02
+
 const createDayBoxes = (daysFromApi) => {
     const daylist = Object.entries(daysFromApi).map(([key, hours], index) => {
         const temperatures = hours.map(element => {
             return element.main.temp - KELWIN_DIFF;
         })
-        
+
         const properIcon = getWeatherDayIcon(hours);
-        
+
         const averageDayTemp = Math.round(temperatures.reduce((sum, currValue) => {
             return sum + currValue
         }, 0) / temperatures.length);
@@ -87,16 +73,12 @@ const createDayBoxes = (daysFromApi) => {
         divDay.className = "day";
         divDay.addEventListener("click", handleDayClick.bind(null, hours, divDay))
         divDay.addEventListener("click", scrollBoxIntoView.bind(null, divDay))
-        //divDay.name = el; el for ex. = 2018-04-25;
-        /*Trzeba przypisać do onclicka funkcję! A nie ją wywołać(!!) jak tu: showHourlyTemp(el).. 
-        Bind umożliwia przypisanie funkcji do zdarzenia z odpowiednim argumentem bez wywołania!!
-        Przypisać funkcji w ten sposób: ... = showHourlyTemp; też nie można bo nie przekazujemy potrzebnego nam argumentu. Ewentualnie można przypisać do onclicka funkcję strzałkową: () => showHourlyTemp(el); która po wykonaniu onclicka się wykona wywołując naszą funkcję z odpowiednim argumentem.
-        */
+
         if(index === 0) {
             selectDay(divDay);
             toggleBackground(properIcon.weatherCode)
         };
-        
+
         return divDay;
     });
     return daylist;
@@ -127,7 +109,7 @@ const createHourBoxes = (day) => {
         const hourAndTemp = {hour: `${hours[0]}:${hours[1]}`, celsius: temp};
 
         const properIcon = getWeatherDayIcon([el]);
-        
+
         const accordionHeadline = el.weather[0].description;
         const windSpeed = Math.round(el.wind.speed*(METERS_TO_KILOMETER/SECONDS_TO_HOUR));
         const pressure = Math.round(el.main.pressure);
@@ -161,7 +143,7 @@ const createHourBoxes = (day) => {
             </div>
         `;
         divHourBox.addEventListener("click", scrollBoxIntoView.bind(null, divHourBox));
-        
+
         divHourBox.tabIndex = "1";
         divHourBox.className = "hour-box";
         return divHourBox;
@@ -181,7 +163,7 @@ const renderDivlist = (htmlElements, nameOfList) => {
        divList.appendChild(element);
     });
     divList.className = nameOfList;
-    
+
     const list = document.getElementsByClassName(nameOfList)[0];
     list.parentNode.replaceChild(divList, list);
 }
@@ -191,24 +173,8 @@ let fetchWeather = (city)=>{
     return fetch(requestUrl, {
         method: 'get'
     }).then((response)=> {
-        return response.json(); //fetch zwraca obiekt response, a potem w wykonujemy funkcję json zawartą w prototypie tego response, żeby dostać potrzebne dane. json() tylko je wyciąga, a ich konkwersja dzieje się pod spodem
+        return response.json();
     }).catch(error => {
         console.error("error", error);
         return error;
     })
-    
-    /* Zamiast zwykłego XHR, stosuje się funkcję fetch, która domyślnie zwraca Promise, a wszystkie funkcje z promisa starego robi pod spodem:)
-    return new Promise((resolve, reject)=>
-    {
-        let req = new XMLHttpRequest();
-        req.open('GET', `https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="${city}")&format=json&env=store://datatables.org/alltableswithkeys`)
-                //select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="nome, ak") format=json)
-        req.onload = ()=> resolve(req.responseText)
-        req.onerror = ()=> reject("Dane nie przyszły")
-        req.ontimeout = () => reject("timeout");
-        req.onabort = () => reject("abort");
-        req.send(null);
-    })*/
-}
-
-

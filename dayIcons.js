@@ -26,8 +26,8 @@ const groupWeatherCodes = (mainHours)=> {
 
 const mostFrequentCode = (groupedWeatherCodes) => {
 	const mostFrequent = Object.entries(groupedWeatherCodes)
-		.reduce((previousVal, currVal) => (
-			previousVal[1] > currVal[1] ? previousVal : currVal
+    .reduce((previousVal, currVal) => (
+        previousVal[1] > currVal[1] ? previousVal : currVal
 		));
 	return mostFrequent[0];
 }
