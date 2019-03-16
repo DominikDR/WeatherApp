@@ -178,3 +178,4 @@ let fetchWeather = (city)=>{
         console.error("error", error);
         return error;
     })
+}
